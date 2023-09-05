@@ -21,7 +21,8 @@ class All_to_do_items(APIView):
                                           "entry": {
                                               "date_added": items.date_added,
                                               "item": items.item,
-                                              "notes": items.notes
+                                              "notes": items.notes,
+                                              "complete": items.done
                                           }
                                           })
         return Response(answer)
@@ -41,16 +42,20 @@ class Single_item(APIView):
     permission_classes = [IsAuthenticated]
 
     def put(self, request, id):
-        if request.data["item"]:
+        item = To_do_item.objects.get(id=id)
+        print(request.data.keys())
+        print('complete' in request.data.keys())
+        if "item" in request.data.keys():
             print("IF WORKED")
-            item = To_do_item.objects.get(id=id)
             item.item = request.data.get("item")
             item.save()
-        if request.data["notes"]:
-            item = To_do_item.objects.get(id=id)
+        if "notes" in request.data.keys():
             item.notes = request.data.get("notes")
             item.save()
-        return Response(item.notes)
+        if "complete" in request.data.keys():
+            item.done = request.data.get("complete")
+            item.save()
+        return Response(item)
 
     def delete(self, request, id):
         try:

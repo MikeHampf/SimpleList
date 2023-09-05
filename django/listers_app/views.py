@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.status import HTTP_201_CREATED
+from rest_framework.status import HTTP_201_CREATED, HTTP_200_OK, HTTP_204_NO_CONTENT
 
 class Sign_Up(APIView):
     def post (self, request):
@@ -24,4 +24,29 @@ class Sign_Up(APIView):
             },
             status=HTTP_201_CREATED
             )
+    
+class Login(APIView):
+    def post(self, request):
+        email = request.data.get("email")
+        password = request.data.get("password")
+        lister = authenticate(username=email, password=password)
+        if lister:
+            token, created = Token.objects.get_or_create(user=lister)
+            return Response(
+                {
+                    "token": token.key,
+                    "lister": lister.user_name,
+                    "email": lister.email,
+                    "id": lister.id,
+                },
+                status=HTTP_200_OK
+            )
+        
+class Logout(APIView):
+    authentication_classes=[TokenAuthentication]
+    permission_classes=[IsAuthenticated]
+
+    def post(self, request):
+        request.user.auth_token.delete()
+        return Response("YOU'VE BEEN LOGGED OUT", status=HTTP_204_NO_CONTENT)
 
