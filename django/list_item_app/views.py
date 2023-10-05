@@ -55,7 +55,7 @@ class Single_item(APIView):
         if "complete" in request.data.keys():
             item.done = request.data.get("complete")
             item.save()
-        return Response(item)
+        return Response(item.done)
 
     def delete(self, request, id):
         try:

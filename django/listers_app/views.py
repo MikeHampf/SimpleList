@@ -49,4 +49,25 @@ class Logout(APIView):
     def post(self, request):
         request.user.auth_token.delete()
         return Response("YOU'VE BEEN LOGGED OUT", status=HTTP_204_NO_CONTENT)
+    
+class Unsubscribe(APIView):
+    authentication_classes=[TokenAuthentication]
+    permission_classes=[IsAuthenticated]
+
+    def delete(self, request):
+        request.user.delete()
+        return Response("YOU'VE BEEN DELETED", status=HTTP_204_NO_CONTENT)
+    
+class Info(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response({
+                    "email": request.user.email,
+                    "user_name": request.user.user_name,
+                    "id": request.user.id,
+                    "date_joined": request.user.date_joined
+                         },
+                         status=HTTP_200_OK)
 

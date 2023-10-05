@@ -1,0 +1,16 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  border: 6px solid blue;
+  border-radius: 20px;
+  background-color: #484848;
+}
+
+.card {
+  padding: 2em;
+  border: 6px solid blue;
+  border-radius: 20px;
+}
+
